@@ -15,7 +15,12 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type LoginOutput {
+  token: String!
+}
+
 type Query {
+  whoami: User!
   users(distinct: [UserScalarFieldEnum!], where: UserWhereInput, orderBy: [UserOrderByWithRelationInput!], cursor: UserWhereUniqueInput, take: Int, skip: Int): [User!]!
   user(where: UserWhereUniqueInput!): User!
 }
@@ -87,6 +92,7 @@ input UserWhereUniqueInput {
 type Mutation {
   registerWithCredentials(registerWithCredentialsInput: RegisterWithCredentialsInput!): User!
   registerWithProvider(registerWithProviderInput: RegisterWithProviderInput!): User!
+  login(loginInput: LoginInput!): LoginOutput!
   updateUser(updateUserInput: UpdateUserInput!): User!
   removeUser(where: UserWhereUniqueInput!): User!
 }
@@ -108,6 +114,11 @@ input RegisterWithProviderInput {
 enum AuthProviderType {
   GOOGLE
   CREDENTIALS
+}
+
+input LoginInput {
+  email: String!
+  password: String!
 }
 
 input UpdateUserInput {
