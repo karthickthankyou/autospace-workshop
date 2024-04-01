@@ -6,10 +6,17 @@ settings:
 
 importers:
 
-  .: {}
+  .:
+    devDependencies:
+      typescript:
+        specifier: ^5.4.3
+        version: 5.4.3
 
   apps/api:
     dependencies:
+      '@autospace/sample-lib':
+        specifier: workspace:^
+        version: link:../../libs/sample-lib
       '@nestjs/common':
         specifier: ^9.0.0
         version: 9.4.3(reflect-metadata@0.1.14)(rxjs@7.8.1)
@@ -92,6 +99,9 @@ importers:
 
   apps/web:
     dependencies:
+      '@autospace/sample-lib':
+        specifier: workspace:^
+        version: link:../../libs/sample-lib
       next:
         specifier: 14.1.4
         version: 14.1.4(react-dom@18.2.0)(react@18.2.0)
@@ -129,6 +139,8 @@ importers:
       typescript:
         specifier: ^5
         version: 5.4.3
+
+  libs/sample-lib: {}
 
 packages:
 
