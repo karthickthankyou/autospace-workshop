@@ -3,6 +3,7 @@
 # ------------------------------------------------------
 
 type User {
+  image: String
   name: String
   uid: String!
   createdAt: DateTime!
@@ -24,6 +25,7 @@ enum UserScalarFieldEnum {
   createdAt
   updatedAt
   name
+  image
 }
 
 input UserWhereInput {
@@ -83,17 +85,31 @@ input UserWhereUniqueInput {
 }
 
 type Mutation {
-  createUser(createUserInput: CreateUserInput!): User!
+  registerWithCredentials(registerWithCredentialsInput: RegisterWithCredentialsInput!): User!
+  registerWithProvider(registerWithProviderInput: RegisterWithProviderInput!): User!
   updateUser(updateUserInput: UpdateUserInput!): User!
   removeUser(where: UserWhereUniqueInput!): User!
 }
 
-input CreateUserInput {
+input RegisterWithCredentialsInput {
+  name: String!
+  email: String!
+  password: String!
+  image: String
+}
+
+input RegisterWithProviderInput {
+  image: String
   name: String
   uid: String!
+  type: AuthProviderType!
+}
+
+enum AuthProviderType {
+  GOOGLE
+  CREDENTIALS
 }
 
 input UpdateUserInput {
-  name: String
   uid: String!
 }
