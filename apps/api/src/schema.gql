@@ -3,24 +3,97 @@
 # ------------------------------------------------------
 
 type User {
+  name: String
   uid: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
 type Query {
-  users: [User!]!
-  user(id: Int!): User!
+  users(distinct: [UserScalarFieldEnum!], where: UserWhereInput, orderBy: [UserOrderByWithRelationInput!], cursor: UserWhereUniqueInput, take: Int, skip: Int): [User!]!
+  user(where: UserWhereUniqueInput!): User!
+}
+
+enum UserScalarFieldEnum {
+  uid
+  createdAt
+  updatedAt
+  name
+}
+
+input UserWhereInput {
+  uid: StringFilter
+  createdAt: DateTimeFilter
+  updatedAt: DateTimeFilter
+  name: StringFilter
+  AND: [UserWhereInput!]
+  OR: [UserWhereInput!]
+  NOT: [UserWhereInput!]
+}
+
+input StringFilter {
+  mode: QueryMode
+  equals: String
+  in: [String!]
+  notIn: [String!]
+  lt: String
+  lte: String
+  gt: String
+  gte: String
+  contains: String
+  startsWith: String
+  endsWith: String
+  not: String
+}
+
+enum QueryMode {
+  default
+  insensitive
+}
+
+input DateTimeFilter {
+  equals: String
+  in: [String!]
+  notIn: [String!]
+  lt: String
+  lte: String
+  gt: String
+  gte: String
+}
+
+input UserOrderByWithRelationInput {
+  uid: SortOrder
+  createdAt: SortOrder
+  updatedAt: SortOrder
+  name: SortOrder
+}
+
+enum SortOrder {
+  asc
+  desc
+}
+
+input UserWhereUniqueInput {
+  uid: String!
 }
 
 type Mutation {
   createUser(createUserInput: CreateUserInput!): User!
   updateUser(updateUserInput: UpdateUserInput!): User!
-  removeUser(id: Int!): User!
+  removeUser(where: UserWhereUniqueInput!): User!
 }
 
 input CreateUserInput {
+  name: String
   uid: String!
 }
 
 input UpdateUserInput {
+  name: String
   uid: String!
 }
