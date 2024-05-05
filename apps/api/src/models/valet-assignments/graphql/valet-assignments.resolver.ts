@@ -1,4 +1,11 @@
-import { Resolver, Query, Mutation, Args } from '@nestjs/graphql'
+import {
+  ResolveField,
+  Parent,
+  Resolver,
+  Query,
+  Mutation,
+  Args,
+} from '@nestjs/graphql'
 import { ValetAssignmentsService } from './valet-assignments.service'
 import { ValetAssignment } from './entity/valet-assignment.entity'
 import {
@@ -11,6 +18,7 @@ import { checkRowLevelPermission } from 'src/common/auth/util'
 import { GetUserType } from 'src/common/types'
 import { AllowAuthenticated, GetUser } from 'src/common/auth/auth.decorator'
 import { PrismaService } from 'src/common/prisma/prisma.service'
+import { Valet } from 'src/models/valets/graphql/entity/valet.entity'
 
 @Resolver(() => ValetAssignment)
 export class ValetAssignmentsResolver {
@@ -67,5 +75,25 @@ export class ValetAssignmentsResolver {
       valetAssignment.returnValetId,
     ])
     return this.valetAssignmentsService.remove(args)
+  }
+
+  @ResolveField(() => Valet, { nullable: true })
+  pickupValet(@Parent() parent: ValetAssignment) {
+    if (!parent.pickupValetId) {
+      return null
+    }
+    return this.prisma.valet.findUnique({
+      where: { uid: parent.pickupValetId },
+    })
+  }
+
+  @ResolveField(() => Valet, { nullable: true })
+  returnValet(@Parent() parent: ValetAssignment) {
+    if (!parent.returnValetId) {
+      return null
+    }
+    return this.prisma.valet.findUnique({
+      where: { uid: parent.returnValetId },
+    })
   }
 }
