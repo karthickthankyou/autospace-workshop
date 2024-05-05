@@ -6,7 +6,7 @@ import {
   registerEnumType,
 } from '@nestjs/graphql'
 import { User } from '../entity/user.entity'
-import { AuthProviderType } from '@prisma/client'
+import { AuthProviderType, SlotType } from '@prisma/client'
 
 registerEnumType(AuthProviderType, {
   name: 'AuthProviderType',
