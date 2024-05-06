@@ -2,12 +2,24 @@
 import { add } from '@autospace/sample-lib'
 import { useQuery } from '@apollo/client'
 import { CompaniesDocument } from '@autospace/network/src/gql/generated'
-
+import { BrandIcon } from '@autospace/ui/src/components/atoms/BrandIcon'
+import { Button } from '@autospace/ui/src/components/atoms/Button'
+import { useSession, signOut } from 'next-auth/react'
+import Link from 'next/link'
 export default function Home() {
   const { data, loading } = useQuery(CompaniesDocument)
 
+  const { data: sessionData, status } = useSession()
+
   return (
-    <main className="bg-primary">
+    <main className=" p-8">
+      <div>
+        {sessionData?.user?.uid ? (
+          <Button onClick={() => signOut()}>Signout</Button>
+        ) : (
+          <Link href="/login">Login</Link>
+        )}
+      </div>
       Hello {add(343, 3)}
       <div>
         {data?.companies.map((company) => (
