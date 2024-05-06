@@ -7,11 +7,11 @@ export default function Home() {
   const { data, loading } = useQuery(CompaniesDocument)
 
   return (
-    <main>
+    <main className="bg-primary">
       Hello {add(343, 3)}
       <div>
         {data?.companies.map((company) => (
-          <div className="p-4 bg-gray-100 rounded" key={company.id}>
+          <div className="p-4   rounded" key={company.id}>
             <div>{company.description}</div>
             <div>{company.description}</div>
           </div>

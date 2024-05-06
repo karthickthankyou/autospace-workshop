@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
-import './globals.css'
+import '@autospace/ui/src/app/globals.css'
 import { ApolloProvider } from '@autospace/network/src/config/apollo'
 
 const inter = Inter({ subsets: ['latin'] })
