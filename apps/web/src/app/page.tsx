@@ -12,7 +12,7 @@ export default function Home() {
       <div>
         {data?.companies.map((company) => (
           <div className="p-4 bg-gray-100 rounded" key={company.id}>
-            <div>{company.displayName}</div>
+            <div>{company.description}</div>
             <div>{company.description}</div>
           </div>
         ))}

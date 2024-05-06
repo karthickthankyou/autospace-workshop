@@ -7,7 +7,7 @@ import {
   Parent,
 } from '@nestjs/graphql'
 import { UsersService } from './users.service'
-import { User } from './entity/user.entity'
+import { AuthProvider, User } from './entity/user.entity'
 import { FindManyUserArgs, FindUniqueUserArgs } from './dtos/find.args'
 import {
   LoginInput,
@@ -90,6 +90,11 @@ export class UsersResolver {
     const userInfo = await this.prisma.user.findUnique(args)
     checkRowLevelPermission(user, userInfo.uid)
     return this.usersService.remove(args)
+  }
+
+  @Query(() => AuthProvider, { name: 'getAuthProvider', nullable: true })
+  getAuthProvider(@Args('uid') uid: string) {
+    return this.prisma.authProvider.findUnique({ where: { uid } })
   }
 
   @ResolveField(() => Admin, { nullable: true })
