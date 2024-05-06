@@ -10,6 +10,7 @@
     "tsc": "tsc --noEmit"
   },
   "dependencies": {
+    "@autospace/network": "*",
     "@autospace/sample-lib": "*",
     "next": "14.1.4",
     "react": "^18",
