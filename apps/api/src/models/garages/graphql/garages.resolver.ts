@@ -19,6 +19,14 @@ import { Slot } from 'src/models/slots/graphql/entity/slot.entity'
 import { Address } from 'src/models/addresses/graphql/entity/address.entity'
 import { Company } from 'src/models/companies/graphql/entity/company.entity'
 import { Verification } from 'src/models/verifications/graphql/entity/verification.entity'
+import {
+  DateFilterInput,
+  GarageFilter,
+  MinimalSlotGroupBy,
+} from './dtos/search-filter.input'
+import { LocationFilterInput } from 'src/common/dtos/common.input'
+import { SlotWhereInput } from 'src/models/slots/graphql/dtos/where.args'
+import { BadRequestException } from '@nestjs/common'
 
 @Resolver(() => Garage)
 export class GaragesResolver {
@@ -41,6 +49,114 @@ export class GaragesResolver {
   @Query(() => Garage, { name: 'garage' })
   findOne(@Args() args: FindUniqueGarageArgs) {
     return this.garagesService.findOne(args)
+  }
+
+  @Query(() => [Garage], { name: 'searchGarages' })
+  async searchGarages(
+    @Args('dateFilter') dateFilter: DateFilterInput,
+    @Args('locationFilter') locationFilter: LocationFilterInput,
+    @Args('slotsFilter', { nullable: true }) slotsFilter: SlotWhereInput,
+    @Args('garageFilter', { nullable: true }) args: GarageFilter,
+  ) {
+    const { start, end } = dateFilter
+    const { ne_lat, ne_lng, sw_lat, sw_lng } = locationFilter
+
+    let startDate = new Date(start)
+    let endDate = new Date(end)
+    const currentDate = new Date()
+
+    const diffInSeconds = Math.floor(
+      (endDate.getTime() - startDate.getTime()) / 1000,
+    )
+
+    if (startDate.getTime() < currentDate.getTime()) {
+      // Set startDate as current time
+      startDate = new Date()
+      const updatedEndDate = new Date(startDate)
+      updatedEndDate.setSeconds(updatedEndDate.getSeconds() + diffInSeconds)
+      endDate = updatedEndDate
+    }
+
+    if (startDate.getTime() > endDate.getTime()) {
+      throw new BadRequestException(
+        'Start time should be earlier than the end time.',
+      )
+    }
+
+    const { where = {}, ...garageFilters } = args || {}
+
+    return this.prisma.garage.findMany({
+      ...garageFilters,
+      where: {
+        ...where,
+        Address: {
+          lat: { lte: ne_lat, gte: sw_lat },
+          lng: { lte: ne_lng, gte: sw_lng },
+        },
+        Slots: {
+          some: {
+            ...slotsFilter,
+            Bookings: {
+              none: {
+                OR: [
+                  {
+                    startTime: { lt: endDate },
+                    endTime: { gt: startDate },
+                  },
+                  {
+                    startTime: { gt: startDate },
+                    endTime: { lt: endDate },
+                  },
+                ],
+              },
+            },
+          },
+        },
+      },
+    })
+  }
+
+  @ResolveField(() => [MinimalSlotGroupBy], {
+    name: 'availableSlots',
+  })
+  async availableSlots(
+    @Parent() garage: Garage,
+    @Args('slotsFilter', { nullable: true }) slotsFilter: SlotWhereInput,
+    @Args('dateFilter') dateFilter: DateFilterInput,
+  ) {
+    const { start, end } = dateFilter
+    const startDate = new Date(start)
+    const endDate = new Date(end)
+
+    const groupBySlots = await this.prisma.slot.groupBy({
+      by: ['type'],
+      _count: { type: true },
+      _min: { pricePerHour: true },
+      where: {
+        ...slotsFilter,
+        garageId: { equals: garage.id },
+        Bookings: {
+          none: {
+            OR: [
+              {
+                startTime: { lt: endDate },
+                endTime: { gt: startDate },
+              },
+              {
+                startTime: { gt: startDate },
+                endTime: { lt: endDate },
+              },
+            ],
+          },
+        },
+      },
+    })
+
+    return groupBySlots.map(({ _count, type, _min }) => ({
+      type,
+      count: _count.type,
+      pricePerHour: _min.pricePerHour,
+    }))
   }
 
   @AllowAuthenticated()

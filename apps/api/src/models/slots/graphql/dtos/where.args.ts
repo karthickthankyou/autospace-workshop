@@ -16,6 +16,18 @@ export class SlotWhereUniqueInput {
 }
 
 @InputType()
+export class EnumSlotTypeFilter {
+  @Field(() => $Enums.SlotType, { nullable: true })
+  equals?: $Enums.SlotType;
+  @Field(() => [$Enums.SlotType], { nullable: true })
+  in?: $Enums.SlotType[]
+  @Field(() => [$Enums.SlotType], { nullable: true })
+  notIn?: $Enums.SlotType[]
+  @Field(() => $Enums.SlotType, { nullable: true })
+  not?: $Enums.SlotType
+}
+
+@InputType()
 export class SlotWhereInputStrict
   implements RestrictProperties<SlotWhereInputStrict, Prisma.SlotWhereInput>
 {
@@ -27,8 +39,8 @@ export class SlotWhereInputStrict
   length: IntFilter
   width: IntFilter
   height: IntFilter
-  @Field(() => $Enums.SlotType)
-  type: $Enums.SlotType
+
+  type: EnumSlotTypeFilter
   garageId: IntFilter
   Garage: GarageRelationFilter
   Bookings: BookingListRelationFilter
