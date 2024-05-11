@@ -18,7 +18,7 @@ export const formSchemaSearchGarage = z.object({
     sw_lng: z.number(),
   }),
 
-  type: z.nativeEnum(SlotType).array(),
+  types: z.nativeEnum(SlotType).array(),
 
   pricePerHour: minMaxTuple.optional(),
   height: minMaxTuple.optional(),
@@ -79,7 +79,7 @@ export const formDefaultValuesSearchGarages: DefaultValues<FormTypeSearchGarage>
     width: [0, 20],
     height: [0, 100],
     length: [0, 100],
-    type: AllSlotTypes.sort(),
+    types: AllSlotTypes.sort(),
   }
 
 export const FormProviderSearchGarage = ({

@@ -8,6 +8,8 @@ import { Sidebar } from './Sidebar'
 import { UserInfo } from '../molecules/UserInfo'
 import { LogoutButton } from '../molecules/LogoutButton'
 import { Button } from '../atoms/Button'
+import { useDialogState } from '@autospace/util/hooks/dialog'
+import { NavSidebar } from './NavSidebar'
 
 export type IHeaderProps = {
   type?: Role
@@ -17,6 +19,7 @@ export type IHeaderProps = {
 export const Header = ({ type, menuItems }: IHeaderProps) => {
   const session = useSession()
   const uid = session?.data?.user?.uid
+  let [open, setOpen] = useDialogState(false)
 
   return (
     <header>
@@ -28,27 +31,7 @@ export const Header = ({ type, menuItems }: IHeaderProps) => {
           </Link>
           <div className="flex items-center gap-2">
             {uid ? (
-              <Sidebar>
-                <div className="flex flex-col justify-between h-full">
-                  <div>
-                    <UserInfo className="mb-4" />
-                    <div className="flex flex-col items-start justify-between space-y-1">
-                      {menuItems.map(({ label, href }) => (
-                        <Link
-                          className="hover:underline underline-offset-4 transition-all hover:pl-1"
-                          key={label}
-                          href={href}
-                        >
-                          {label}
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="pb-4">
-                    <LogoutButton />
-                  </div>
-                </div>
-              </Sidebar>
+              <NavSidebar menuItems={menuItems} />
             ) : (
               <>
                 <Link href="/register">

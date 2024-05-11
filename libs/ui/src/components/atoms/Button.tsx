@@ -16,19 +16,19 @@ export type IButtonProps = {
 const variantColor = {
   contained: {
     primary:
-      'text-black bg-primary border-2 border-primary hover:bg-primary-600',
+      'text-black bg-primary border-2 border-primary enabled:hover:bg-primary-600',
     white: 'text-black bg-white',
-    black: 'text-primary bg-black hover:bg-gray-900',
-    success: 'text-white bg-green hover:bg-green-700',
-    error: 'text-white bg-red hover:bg-red-700',
+    black: 'text-primary bg-black enabled:hover:bg-gray-900',
+    success: 'text-white bg-green enabled:hover:bg-green-700',
+    error: 'text-white bg-red enabled:hover:bg-red-700',
   },
 
   outlined: {
-    primary: 'border-2 border-primary text-black hover:bg-black/10',
-    white: 'border-2 border-white text-white hover:bg-white/10',
-    black: 'border-2 border-black text-black hover:bg-black/10',
-    success: 'border-2 border-green text-green hover:bg-green-100',
-    error: 'border-2 border-red text-red hover:bg-red-100',
+    primary: 'border-2 border-primary text-black enabled:hover:bg-black/10',
+    white: 'border-2 border-white text-white enabled:hover:bg-white/10',
+    black: 'border-2 border-black text-black enabled:hover:bg-black/10',
+    success: 'border-2 border-green text-green enabled:hover:bg-green-100',
+    error: 'border-2 border-red text-red enabled:hover:bg-red-100',
   },
   text: {
     primary: 'text-primary-800 ',
