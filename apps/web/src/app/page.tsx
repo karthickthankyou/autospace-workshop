@@ -14,7 +14,7 @@ import Link from 'next/link'
 export default function Home() {
   const { data, loading } = useQuery(CompaniesDocument)
 
-  const { data: garages } = useQuery(SearchGaragesDocument, {
+  const { data: garages, error } = useQuery(SearchGaragesDocument, {
     variables: {
       dateFilter: { end: '2024-12-14', start: '2024-12-04' },
       locationFilter: {
@@ -25,6 +25,8 @@ export default function Home() {
       },
     },
   })
+
+  console.log(garages, error)
 
   return (
     <main className=" p-8">

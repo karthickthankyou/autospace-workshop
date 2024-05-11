@@ -12,9 +12,11 @@
     "@autospace/forms": "*",
     "@autospace/util": "*",
     "@headlessui/react": "^2.0.3",
+    "mapbox-gl": "^3.3.0",
     "next": "14.2.3",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "react-map-gl": "^7.1.7"
   },
   "devDependencies": {
     "@types/node": "^20",

@@ -8,3 +8,9 @@ export type BaseComponent = {
 }
 
 export type MenuItem = { label: string; href: string }
+
+export type ViewState = {
+  latitude: number
+  longitude: number
+  zoom?: number
+}
