@@ -19,8 +19,6 @@ export const SearchPage = () => {
   const { register, setValue, watch } = useFormContext<FormTypeSearchGarage>()
   const formData = watch()
 
-  console.log('formData', formData)
-
   const handleMapChange = useCallback(
     (target: ViewStateChangeEvent['target']) => {
       const bounds = target.getBounds()
@@ -30,7 +28,6 @@ export const SearchPage = () => {
         sw_lat: bounds?.getSouthWest().lat || 0,
         sw_lng: bounds?.getSouthWest().lng || 0,
       }
-      console.log('locationFilter', locationFilter)
       setValue('locationFilter', locationFilter)
     },
     [setValue],

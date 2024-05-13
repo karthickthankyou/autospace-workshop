@@ -19,6 +19,7 @@ export class BookingsService {
     phoneNumber,
     pricePerHour,
     totalPrice,
+    valetAssignment,
   }: CreateBookingInput) {
     // Create customer
     const customer = await this.prisma.customer.findUnique({
@@ -66,6 +67,9 @@ export class BookingsService {
         slotId: slot.id,
         pricePerHour,
         totalPrice,
+        ...(valetAssignment
+          ? { ValetAssignment: { create: valetAssignment } }
+          : null),
       },
     })
   }

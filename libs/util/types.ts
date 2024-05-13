@@ -22,3 +22,10 @@ export type TotalPrice = {
   valetChargeDropoff: number
   valetChargePickup: number
 }
+
+export type LatLng = {
+  lat: number
+  lng: number
+}
+
+export type LngLatTuple = [number, number]

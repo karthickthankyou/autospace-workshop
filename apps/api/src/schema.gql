@@ -1251,6 +1251,14 @@ input CreateBookingInput {
   pricePerHour: Float
   totalPrice: Float
   garageId: Float!
+  valetAssignment: CreateValetAssignmentInputWithoutBookingId
+}
+
+input CreateValetAssignmentInputWithoutBookingId {
+  pickupLat: Float!
+  pickupLng: Float!
+  returnLat: Float
+  returnLng: Float
 }
 
 input UpdateBookingInput {
@@ -1263,6 +1271,7 @@ input UpdateBookingInput {
   pricePerHour: Float
   totalPrice: Float
   garageId: Float
+  valetAssignment: CreateValetAssignmentInputWithoutBookingId
   id: Float!
 }
 

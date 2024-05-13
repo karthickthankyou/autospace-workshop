@@ -23,6 +23,7 @@ import { Button } from '../atoms/Button'
 import { useState } from 'react'
 import { useSession } from 'next-auth/react'
 import { TotalPrice } from '@autospace/util/types'
+import { ManageValets } from './ManageValets'
 
 export const BookSlotPopup = ({
   garage,
@@ -61,7 +62,6 @@ export const BookSlotPopup = ({
     <div className="flex gap-2 text-left border-t-2 border-white bg-white/50 backdrop-blur-sm">
       <Form
         onSubmit={handleSubmit(async (data) => {
-          console.log('formData: ', data)
           if (!uid) {
             alert('You are not logged in.')
             return
@@ -195,6 +195,7 @@ export const BookSlotPopup = ({
         <HtmlLabel title="Phone number" error={errors.phoneNumber?.message}>
           <HtmlInput placeholder="+910000000000" {...register('phoneNumber')} />
         </HtmlLabel>
+        <ManageValets garage={garage} />
 
         {totalPriceObj ? (
           <div className="mt-4">
