@@ -48,3 +48,5 @@ export const majorCitiesLocationInfo: LocationInfo[] = [
     latLng: [39.9042, 116.4074],
   },
 ]
+
+export const VALET_CHARGE_PER_METER = 0.005

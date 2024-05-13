@@ -1242,29 +1242,27 @@ input UpdateSlotInput {
 }
 
 input CreateBookingInput {
-  pricePerHour: Float
-  totalPrice: Float
   phoneNumber: String
-  passcode: String
-  status: BookingStatus!
   startTime: DateTime!
   endTime: DateTime!
   vehicleNumber: String!
-  slotId: Float!
   customerId: String!
+  type: SlotType!
+  pricePerHour: Float
+  totalPrice: Float
+  garageId: Float!
 }
 
 input UpdateBookingInput {
-  pricePerHour: Float
-  totalPrice: Float
   phoneNumber: String
-  passcode: String
-  status: BookingStatus
   startTime: DateTime
   endTime: DateTime
   vehicleNumber: String
-  slotId: Float
   customerId: String
+  type: SlotType
+  pricePerHour: Float
+  totalPrice: Float
+  garageId: Float
   id: Float!
 }
 

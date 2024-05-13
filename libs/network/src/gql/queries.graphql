@@ -17,8 +17,8 @@ query Companies(
   $orderBy: [CompanyOrderByWithRelationInput!]
   $where: CompanyWhereInput
   $cursor: CompanyWhereUniqueInput
-  $skip: Int
-  $take: Int
+  $skip: Float
+  $take: Float
 ) {
   companies(
     distinct: $distinct
@@ -86,6 +86,7 @@ query SearchGarages(
       address
     }
     images
+    displayName
     availableSlots(dateFilter: $dateFilter, slotsFilter: $slotsFilter) {
       type
       pricePerHour

@@ -2,5 +2,12 @@
   "name": "@autospace/util",
   "version": "1.0.0",
   "main": "index.js",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "date-fns": "^3.6.0",
+    "pluralize": "^8.0.0"
+  },
+  "devDependencies": {
+    "@types/pluralize": "^0.0.33"
+  }
 }
