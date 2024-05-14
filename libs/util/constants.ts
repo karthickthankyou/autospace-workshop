@@ -50,3 +50,5 @@ export const majorCitiesLocationInfo: LocationInfo[] = [
 ]
 
 export const VALET_CHARGE_PER_METER = 0.005
+
+export const TAKE_COUNT = 12

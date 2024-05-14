@@ -11,6 +11,7 @@ export class Slot implements RestrictProperties<Slot, SlotType> {
   id: number
   createdAt: Date
   updatedAt: Date
+
   @Field({ nullable: true })
   displayName: string
   pricePerHour: number
@@ -25,4 +26,9 @@ export class Slot implements RestrictProperties<Slot, SlotType> {
   garageId: number
   // Todo Add below to make optional fields optional.
   // @Field({ nullable: true })
+}
+
+@ObjectType()
+export class ReturnCount {
+  count: number
 }

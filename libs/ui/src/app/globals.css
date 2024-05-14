@@ -1,5 +1,15 @@
 @import '../components/organisms/Map/map.css';
+@import 'react-toastify/dist/ReactToastify.css';
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.Toastify__toast {
+  @apply rounded-none font-sans shadow-lg;
+}
+
+.Toastify__progress-bar-theme--light {
+  background: #000;
+  @apply rounded-none;
+}

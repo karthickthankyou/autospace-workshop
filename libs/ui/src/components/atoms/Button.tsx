@@ -31,7 +31,7 @@ const variantColor = {
     error: 'border-2 border-red text-red enabled:hover:bg-red-100',
   },
   text: {
-    primary: 'text-primary-800 ',
+    primary: 'text-primary-900 ',
     white: 'text-white',
     black: 'text-black',
     success: 'text-green ',

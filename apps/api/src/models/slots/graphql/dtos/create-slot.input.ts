@@ -7,3 +7,12 @@ export class CreateSlotInput extends OmitType(
   ['createdAt', 'updatedAt', 'id'],
   InputType,
 ) {}
+
+@InputType()
+export class CreateSlotInputWithoutGarageId extends OmitType(
+  CreateSlotInput,
+  ['garageId'],
+  InputType,
+) {
+  count: number
+}

@@ -7,3 +7,10 @@ export class CreateAddressInput extends OmitType(
   ['createdAt', 'updatedAt', 'id'],
   InputType,
 ) {}
+
+@InputType()
+export class CreateAddressInputWithoutGarageId extends PickType(
+  CreateAddressInput,
+  ['address', 'lat', 'lng'],
+  InputType,
+) {}

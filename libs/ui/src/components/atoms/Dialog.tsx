@@ -1,6 +1,7 @@
 import {
   Dialog as HeadlessUIDialog,
   DialogPanel,
+  DialogTitle,
   Transition,
   TransitionChild,
 } from '@headlessui/react'
@@ -43,7 +44,7 @@ export const Dialog = ({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-black/20" />
+          <div className="fixed inset-0 bg-black/20 backdrop-blur-sm" />
         </TransitionChild>
 
         <div className="fixed inset-0 overflow-y-auto">
@@ -67,12 +68,12 @@ export const Dialog = ({
                 >
                   <IconX className="text-gray-600" />
                 </button>
-                <HeadlessUIDialog.Title
+                <DialogTitle
                   as="h3"
                   className="mb-4 text-lg font-medium leading-6 text-gray-900"
                 >
                   {title}
-                </HeadlessUIDialog.Title>
+                </DialogTitle>
                 {children}
               </DialogPanel>
             </TransitionChild>
