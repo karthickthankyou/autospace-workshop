@@ -23,7 +23,7 @@ export const Accordion = ({
     {({ open }) => (
       <>
         <DisclosureButton
-          className={`flex justify-between w-full py-2 font-medium ${className}`}
+          className={`flex justify-between items-center w-full py-2 font-medium ${className}`}
         >
           <span
             className={`text-left ${open ? 'font-semibold' : 'text-gray-600'}`}

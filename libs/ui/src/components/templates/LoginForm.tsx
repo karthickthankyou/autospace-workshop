@@ -51,7 +51,7 @@ export const LoginForm = ({ className }: ILoginFormProps) => {
           placeholder="******"
         />
       </HtmlLabel>
-      <Button type="submit">Sumbit</Button>
+      <Button type="submit">Submit</Button>
       <div className="mt-4 text-sm">
         Do not have an autospace account?
         <br />
