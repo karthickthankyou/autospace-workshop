@@ -18,6 +18,8 @@ import { PrismaService } from 'src/common/prisma/prisma.service'
 import { Slot } from 'src/models/slots/graphql/entity/slot.entity'
 import { Customer } from 'src/models/customers/graphql/entity/customer.entity'
 import { ValetAssignment } from 'src/models/valet-assignments/graphql/entity/valet-assignment.entity'
+import { AggregateCountOutput } from 'src/common/dtos/common.input'
+import { BookingWhereInput } from './dtos/where.args'
 
 @Resolver(() => Booking)
 export class BookingsResolver {
@@ -36,9 +38,53 @@ export class BookingsResolver {
     return this.bookingsService.create(args)
   }
 
+  @AllowAuthenticated('admin')
   @Query(() => [Booking], { name: 'bookings' })
   findAll(@Args() args: FindManyBookingArgs) {
     return this.bookingsService.findAll(args)
+  }
+
+  @AllowAuthenticated('manager', 'admin')
+  @Query(() => [Booking], { name: 'bookingsForGarage' })
+  async bookingsForGarage(
+    @Args()
+    { cursor, distinct, orderBy, skip, take, where }: FindManyBookingArgs,
+    @Args('garageId') garageId: number,
+    @GetUser() user: GetUserType,
+  ) {
+    const garage = await this.prisma.garage.findUnique({
+      where: { id: garageId },
+      include: { Company: { include: { Managers: true } } },
+    })
+
+    checkRowLevelPermission(
+      user,
+      garage.Company.Managers.map((manager) => manager.uid),
+    )
+
+    return this.bookingsService.findAll({
+      cursor,
+      distinct,
+      orderBy,
+      skip,
+      take,
+      where: {
+        ...where,
+        Slot: { is: { garageId: { equals: garageId } } },
+      },
+    })
+  }
+
+  @Query(() => AggregateCountOutput)
+  async bookingsCount(
+    @Args('where', { nullable: true })
+    where: BookingWhereInput,
+  ) {
+    const bookings = await this.prisma.booking.aggregate({
+      where,
+      _count: { _all: true },
+    })
+    return { count: bookings._count._all }
   }
 
   @Query(() => Booking, { name: 'booking' })

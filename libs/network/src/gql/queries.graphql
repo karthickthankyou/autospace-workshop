@@ -172,3 +172,78 @@ mutation CreateManySlots($createSlotInput: CreateSlotInput!, $count: Float!) {
     count
   }
 }
+
+fragment ValetFields on Valet {
+  image
+  uid
+  displayName
+}
+
+fragment BookingFields on Booking {
+  id
+  pricePerHour
+  endTime
+  startTime
+  vehicleNumber
+  passcode
+  status
+  valetAssignment {
+    pickupValet {
+      ...ValetFields
+    }
+    returnValet {
+      ...ValetFields
+    }
+  }
+  slot {
+    displayName
+    garage {
+      images
+      address {
+        address
+        lat
+        lng
+      }
+    }
+  }
+}
+
+query BookingsForGarage(
+  $garageId: Float!
+  $skip: Float
+  $take: Float
+  $cursor: BookingWhereUniqueInput
+  $orderBy: [BookingOrderByWithRelationInput!]
+  $where: BookingWhereInput
+  $distinct: [BookingScalarFieldEnum!]
+) {
+  bookingsForGarage(
+    garageId: $garageId
+    skip: $skip
+    take: $take
+    cursor: $cursor
+    orderBy: $orderBy
+    where: $where
+    distinct: $distinct
+  ) {
+    ...BookingFields
+  }
+
+  bookingsCount(where: $where) {
+    count
+  }
+}
+
+mutation createBookingTimeline(
+  $createBookingTimelineInput: CreateBookingTimelineInput!
+) {
+  createBookingTimeline(
+    createBookingTimelineInput: $createBookingTimelineInput
+  ) {
+    bookingId
+    id
+    managerId
+    status
+    timestamp
+  }
+}

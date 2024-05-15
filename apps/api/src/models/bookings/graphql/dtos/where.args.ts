@@ -1,5 +1,5 @@
 import { Field, InputType, PartialType } from '@nestjs/graphql'
-import { $Enums, Prisma } from '@prisma/client'
+import { $Enums, BookingStatus, Prisma } from '@prisma/client'
 import {
   DateTimeFilter,
   FloatFilter,
@@ -18,6 +18,18 @@ export class BookingWhereUniqueInput {
 }
 
 @InputType()
+export class EnumBookingStatusFilter {
+  @Field(() => BookingStatus, { nullable: true })
+  equals: BookingStatus;
+  @Field(() => [BookingStatus], { nullable: true })
+  in: BookingStatus[]
+  @Field(() => [BookingStatus], { nullable: true })
+  notIn: BookingStatus[]
+  @Field(() => BookingStatus, { nullable: true })
+  not: BookingStatus
+}
+
+@InputType()
 export class BookingWhereInputStrict
   implements
     RestrictProperties<BookingWhereInputStrict, Prisma.BookingWhereInput>
@@ -32,8 +44,8 @@ export class BookingWhereInputStrict
   vehicleNumber: StringFilter
   phoneNumber: StringFilter
   passcode: StringFilter
-  @Field(() => $Enums.BookingStatus)
-  status: $Enums.BookingStatus
+
+  status: EnumBookingStatusFilter
   slotId: IntFilter
   customerId: StringFilter
   ValetAssignment: ValetAssignmentRelationFilter

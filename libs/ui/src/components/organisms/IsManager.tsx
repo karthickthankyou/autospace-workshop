@@ -1,3 +1,4 @@
+'use client'
 import { MyCompanyDocument } from '@autospace/network/src/gql/generated'
 import { BaseComponent } from '@autospace/util/types'
 import { useQuery } from '@apollo/client'
