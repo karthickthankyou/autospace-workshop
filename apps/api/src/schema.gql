@@ -642,7 +642,10 @@ type Query {
   managers(distinct: [ManagerScalarFieldEnum!], where: ManagerWhereInput, orderBy: [ManagerOrderByWithRelationInput!], cursor: ManagerWhereUniqueInput, take: Float, skip: Float): [Manager!]!
   manager(where: ManagerWhereUniqueInput!): Manager!
   valets(distinct: [ValetScalarFieldEnum!], where: ValetWhereInput, orderBy: [ValetOrderByWithRelationInput!], cursor: ValetWhereUniqueInput, take: Float, skip: Float): [Valet!]!
+  companyValets(distinct: [ValetScalarFieldEnum!], where: ValetWhereInput, orderBy: [ValetOrderByWithRelationInput!], cursor: ValetWhereUniqueInput, take: Float, skip: Float): [Valet!]!
+  companyValetsTotal(where: ValetWhereInput): Float!
   valet(where: ValetWhereUniqueInput!): Valet!
+  valetMe: Valet!
   companies(distinct: [CompanyScalarFieldEnum!], where: CompanyWhereInput, orderBy: [CompanyOrderByWithRelationInput!], cursor: CompanyWhereUniqueInput, take: Float, skip: Float): [Company!]!
   myCompany: Company!
   company(where: CompanyWhereUniqueInput!): Company!

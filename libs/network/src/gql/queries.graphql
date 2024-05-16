@@ -273,3 +273,44 @@ mutation createBookingTimeline(
     timestamp
   }
 }
+
+query ValetMe {
+  valetMe {
+    uid
+    companyId
+  }
+}
+
+mutation CreateValet($createValetInput: CreateValetInput!) {
+  createValet(createValetInput: $createValetInput) {
+    uid
+  }
+}
+
+query companyValets(
+  $distinct: [ValetScalarFieldEnum!]
+  $skip: Float
+  $take: Float
+  $cursor: ValetWhereUniqueInput
+  $orderBy: [ValetOrderByWithRelationInput!]
+  $where: ValetWhereInput
+) {
+  companyValets(
+    distinct: $distinct
+    skip: $skip
+    take: $take
+    cursor: $cursor
+    orderBy: $orderBy
+    where: $where
+  ) {
+    displayName
+    uid
+    createdAt
+    updatedAt
+    companyId
+    image
+    licenceID
+  }
+
+  companyValetsTotal(where: $where)
+}

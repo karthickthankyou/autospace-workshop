@@ -8,6 +8,7 @@ import { checkRowLevelPermission } from 'src/common/auth/util'
 import { GetUserType } from 'src/common/types'
 import { AllowAuthenticated, GetUser } from 'src/common/auth/auth.decorator'
 import { PrismaService } from 'src/common/prisma/prisma.service'
+import { ValetWhereInput } from './dtos/where.args'
 
 @Resolver(() => Valet)
 export class ValetsResolver {
@@ -18,12 +19,15 @@ export class ValetsResolver {
 
   @AllowAuthenticated()
   @Mutation(() => Valet)
-  createValet(
+  async createValet(
     @Args('createValetInput') args: CreateValetInput,
     @GetUser() user: GetUserType,
   ) {
-    checkRowLevelPermission(user, args.uid)
-    return this.valetsService.create(args)
+    const company = await this.prisma.company.findFirst({
+      where: { Managers: { some: { uid: user.uid } } },
+    })
+
+    return this.valetsService.create({ ...args, companyId: company.id })
   }
 
   @Query(() => [Valet], { name: 'valets' })
@@ -31,9 +35,45 @@ export class ValetsResolver {
     return this.valetsService.findAll(args)
   }
 
+  @AllowAuthenticated('manager', 'admin')
+  @Query(() => [Valet], { name: 'companyValets' })
+  async companyValets(
+    @Args() args: FindManyValetArgs,
+    @GetUser() user: GetUserType,
+  ) {
+    const company = await this.prisma.company.findFirst({
+      where: { Managers: { some: { uid: user.uid } } },
+    })
+    return this.valetsService.findAll({
+      ...args,
+      where: { ...args.where, companyId: { equals: company.id } },
+    })
+  }
+
+  @AllowAuthenticated()
+  @Query(() => Number)
+  async companyValetsTotal(
+    @Args('where', { nullable: true }) where: ValetWhereInput,
+    @GetUser() user: GetUserType,
+  ) {
+    const company = await this.prisma.company.findFirst({
+      where: { Managers: { some: { uid: user.uid } } },
+    })
+
+    return this.prisma.valet.count({
+      where: { ...where, companyId: { equals: company.id } },
+    })
+  }
+
   @Query(() => Valet, { name: 'valet' })
   findOne(@Args() args: FindUniqueValetArgs) {
     return this.valetsService.findOne(args)
+  }
+
+  @AllowAuthenticated()
+  @Query(() => Valet, { name: 'valetMe' })
+  valetMe(@GetUser() user: GetUserType) {
+    return this.valetsService.findOne({ where: { uid: user.uid } })
   }
 
   @AllowAuthenticated()
