@@ -27,11 +27,15 @@ export const ShowGarageBookings = ({
 
   const { data, loading, error } = useQuery(BookingsForGarageDocument, {
     variables: {
-      garageId,
       skip,
       take,
       where: {
         status: { in: statuses },
+        Slot: {
+          is: {
+            garageId: { equals: garageId },
+          },
+        },
         ...(searchTerm && {
           vehicleNumber: {
             contains: searchTerm,

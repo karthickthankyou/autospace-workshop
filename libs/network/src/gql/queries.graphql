@@ -237,7 +237,6 @@ query BookingsForCustomer(
 }
 
 query BookingsForGarage(
-  $garageId: Float!
   $skip: Float
   $take: Float
   $cursor: BookingWhereUniqueInput
@@ -246,7 +245,6 @@ query BookingsForGarage(
   $distinct: [BookingScalarFieldEnum!]
 ) {
   bookingsForGarage(
-    garageId: $garageId
     skip: $skip
     take: $take
     cursor: $cursor

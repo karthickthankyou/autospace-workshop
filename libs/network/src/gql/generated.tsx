@@ -1102,7 +1102,6 @@ export type QueryBookingsForCustomerArgs = {
 export type QueryBookingsForGarageArgs = {
   cursor?: InputMaybe<BookingWhereUniqueInput>
   distinct?: InputMaybe<Array<BookingScalarFieldEnum>>
-  garageId: Scalars['Float']['input']
   orderBy?: InputMaybe<Array<BookingOrderByWithRelationInput>>
   skip?: InputMaybe<Scalars['Float']['input']>
   take?: InputMaybe<Scalars['Float']['input']>
@@ -2144,7 +2143,6 @@ export type BookingsForCustomerQuery = {
 }
 
 export type BookingsForGarageQueryVariables = Exact<{
-  garageId: Scalars['Float']['input']
   skip?: InputMaybe<Scalars['Float']['input']>
   take?: InputMaybe<Scalars['Float']['input']>
   cursor?: InputMaybe<BookingWhereUniqueInput>
@@ -3707,17 +3705,6 @@ export const BookingsForGarageDocument = {
       variableDefinitions: [
         {
           kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'garageId' },
-          },
-          type: {
-            kind: 'NonNullType',
-            type: { kind: 'NamedType', name: { kind: 'Name', value: 'Float' } },
-          },
-        },
-        {
-          kind: 'VariableDefinition',
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'Float' } },
         },
@@ -3793,14 +3780,6 @@ export const BookingsForGarageDocument = {
             kind: 'Field',
             name: { kind: 'Name', value: 'bookingsForGarage' },
             arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'garageId' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'garageId' },
-                },
-              },
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'skip' },
