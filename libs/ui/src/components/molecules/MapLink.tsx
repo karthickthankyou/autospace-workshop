@@ -6,11 +6,13 @@ import { ReactNode } from 'react'
 export interface IMapLinkProps {
   waypoints: LatLng[]
   children?: ReactNode
+  className?: string
 }
 
 export const MapLink = ({
   waypoints,
   children = <IconMap2 />,
+  className,
 }: IMapLinkProps) => {
   if (waypoints.length === 0) {
     return null
@@ -21,7 +23,12 @@ export const MapLink = ({
     const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`
 
     return (
-      <Link href={googleMapsUrl} target="_blank" rel="noopener noreferrer">
+      <Link
+        href={googleMapsUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={className}
+      >
         {children}
       </Link>
     )
@@ -36,7 +43,12 @@ export const MapLink = ({
 
   const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${origin.lat},${origin.lng}&destination=${destination.lat},${destination.lng}&waypoints=${waypointsParam}`
   return (
-    <Link href={googleMapsUrl} target="_blank" rel="noopener noreferrer">
+    <Link
+      href={googleMapsUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={className}
+    >
       {children}
     </Link>
   )

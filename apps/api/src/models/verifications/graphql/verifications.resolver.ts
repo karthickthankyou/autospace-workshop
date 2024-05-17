@@ -7,8 +7,9 @@ import {
 } from './dtos/find.args'
 import { CreateVerificationInput } from './dtos/create-verification.input'
 import { UpdateVerificationInput } from './dtos/update-verification.input'
-import { AllowAuthenticated } from 'src/common/auth/auth.decorator'
+import { AllowAuthenticated, GetUser } from 'src/common/auth/auth.decorator'
 import { PrismaService } from 'src/common/prisma/prisma.service'
+import { GetUserType } from 'src/common/types'
 
 @Resolver(() => Verification)
 export class VerificationsResolver {
@@ -21,8 +22,9 @@ export class VerificationsResolver {
   @Mutation(() => Verification)
   createVerification(
     @Args('createVerificationInput') args: CreateVerificationInput,
+    @GetUser() user: GetUserType,
   ) {
-    return this.verificationsService.create(args)
+    return this.verificationsService.create(args, user.uid)
   }
 
   @Query(() => [Verification], { name: 'verifications' })

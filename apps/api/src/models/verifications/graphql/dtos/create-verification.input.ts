@@ -4,6 +4,6 @@ import { Verification } from '../entity/verification.entity'
 @InputType()
 export class CreateVerificationInput extends OmitType(
   Verification,
-  ['createdAt', 'updatedAt'],
+  ['createdAt', 'updatedAt', 'adminId'],
   InputType,
 ) {}
