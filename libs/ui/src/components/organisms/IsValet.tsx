@@ -20,7 +20,7 @@ export const IsValet = ({
     return <LoaderPanel text="Loading company..." />
   }
 
-  if (!data?.valetMe.companyId)
+  if (!data?.valetMe?.companyId)
     return (
       <AlertSection>
         <div>You are not a valet.</div>

@@ -8,17 +8,15 @@ import { Loader } from '../../molecules/Loader'
 import { IconInfoCircle } from '@tabler/icons-react'
 
 export const ShowGarages = () => {
-  const [searchGarages, { loading, data, error }] = useLazyQuery(
-    SearchGaragesDocument,
-  )
-
   const { variables } = useConvertSearchFormToVariables()
+
+  const [searchGarages, { loading, data }] = useLazyQuery(SearchGaragesDocument)
 
   useEffect(() => {
     if (variables) {
       searchGarages({ variables })
     }
-  }, [searchGarages, variables])
+  }, [variables])
 
   if (data?.searchGarages.length === 0) {
     return (

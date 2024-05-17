@@ -16,20 +16,33 @@ export const Directions = ({
 }) => {
   const [coordinates, setCoordinates] = useState<LngLatTuple[]>([])
   const prevDistanceRef = useRef<number | undefined>(undefined)
+  const prevOriginRef = useRef<LatLng | undefined>(undefined)
+  const prevDestinationRef = useRef<Partial<LatLng> | undefined>(undefined)
 
   const originDebounced = useDebounce(origin, 400)
   const destinationDebounced = useDebounce(destination, 400)
 
   useEffect(() => {
-    if (!originDebounced || !destinationDebounced) {
-      setCoordinates([])
+    if (
+      !originDebounced ||
+      !destinationDebounced ||
+      (prevOriginRef.current &&
+        prevOriginRef.current.lat === originDebounced.lat &&
+        prevOriginRef.current.lng === originDebounced.lng &&
+        prevDestinationRef.current &&
+        prevDestinationRef.current.lat === destinationDebounced.lat &&
+        prevDestinationRef.current.lng === destinationDebounced.lng)
+    ) {
       return
     }
 
+    prevOriginRef.current = originDebounced
+    prevDestinationRef.current = destinationDebounced
     ;(async () => {
       const response = await fetch(
         `https://api.mapbox.com/directions/v5/mapbox/walking/${originDebounced.lng},${originDebounced.lat};${destinationDebounced.lng},${destinationDebounced.lat}?access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}&steps=true&overview=simplified`,
       )
+
       const data = await response.json()
 
       const coordinates =
@@ -46,7 +59,7 @@ export const Directions = ({
         prevDistanceRef.current = newDistance
       }
     })()
-  }, [originDebounced, destinationDebounced])
+  }, [originDebounced, destinationDebounced, setDistance])
 
   const dataOne = useMemo(
     () => ({

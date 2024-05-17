@@ -46,6 +46,24 @@ export class BookingsResolver {
     return this.bookingsService.findAll(args)
   }
 
+  @AllowAuthenticated('valet')
+  @Query(() => [Booking], { name: 'bookingsForValet' })
+  async bookingsForValet(
+    @Args() args: FindManyBookingArgs,
+    @GetUser() user: GetUserType,
+  ) {
+    const company = await this.prisma.company.findFirst({
+      where: { Valets: { some: { uid: user.uid } } },
+    })
+    return this.bookingsService.findAll({
+      ...args,
+      where: {
+        ...args.where,
+        Slot: { is: { Garage: { is: { companyId: { equals: company.id } } } } },
+      },
+    })
+  }
+
   @AllowAuthenticated()
   @Query(() => [Booking], { name: 'bookingsForCustomer' })
   bookingsForCustomer(

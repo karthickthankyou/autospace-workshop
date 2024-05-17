@@ -464,10 +464,10 @@ export type CreateValetAssignmentInput = {
   bookingId: Scalars['Float']['input']
   pickupLat: Scalars['Float']['input']
   pickupLng: Scalars['Float']['input']
-  pickupValetId: Scalars['String']['input']
+  pickupValetId?: InputMaybe<Scalars['String']['input']>
   returnLat?: InputMaybe<Scalars['Float']['input']>
   returnLng?: InputMaybe<Scalars['Float']['input']>
-  returnValetId: Scalars['String']['input']
+  returnValetId?: InputMaybe<Scalars['String']['input']>
 }
 
 export type CreateValetAssignmentInputWithoutBookingId = {
@@ -766,6 +766,7 @@ export type MinimalSlotGroupBy = {
 
 export type Mutation = {
   __typename?: 'Mutation'
+  assignValet: Booking
   createAddress: Address
   createAdmin: Admin
   createBooking: Booking
@@ -811,6 +812,11 @@ export type Mutation = {
   updateValet: Valet
   updateValetAssignment: ValetAssignment
   updateVerification: Verification
+}
+
+export type MutationAssignValetArgs = {
+  bookingId: Scalars['Float']['input']
+  status: Scalars['String']['input']
 }
 
 export type MutationCreateAddressArgs = {
@@ -1007,6 +1013,7 @@ export type Query = {
   bookingsCount: AggregateCountOutput
   bookingsForCustomer: Array<Booking>
   bookingsForGarage: Array<Booking>
+  bookingsForValet: Array<Booking>
   companies: Array<Company>
   company: Company
   companyValets: Array<Valet>
@@ -1030,7 +1037,11 @@ export type Query = {
   valet: Valet
   valetAssignment: ValetAssignment
   valetAssignments: Array<ValetAssignment>
-  valetMe: Valet
+  valetDrops: Array<Booking>
+  valetDropsTotal: Scalars['Float']['output']
+  valetMe?: Maybe<Valet>
+  valetPickups: Array<Booking>
+  valetPickupsTotal: Scalars['Float']['output']
   valets: Array<Valet>
   verification: Verification
   verifications: Array<Verification>
@@ -1103,6 +1114,15 @@ export type QueryBookingsForCustomerArgs = {
 }
 
 export type QueryBookingsForGarageArgs = {
+  cursor?: InputMaybe<BookingWhereUniqueInput>
+  distinct?: InputMaybe<Array<BookingScalarFieldEnum>>
+  orderBy?: InputMaybe<Array<BookingOrderByWithRelationInput>>
+  skip?: InputMaybe<Scalars['Float']['input']>
+  take?: InputMaybe<Scalars['Float']['input']>
+  where?: InputMaybe<BookingWhereInput>
+}
+
+export type QueryBookingsForValetArgs = {
   cursor?: InputMaybe<BookingWhereUniqueInput>
   distinct?: InputMaybe<Array<BookingScalarFieldEnum>>
   orderBy?: InputMaybe<Array<BookingOrderByWithRelationInput>>
@@ -1245,6 +1265,16 @@ export type QueryValetAssignmentsArgs = {
   skip?: InputMaybe<Scalars['Float']['input']>
   take?: InputMaybe<Scalars['Float']['input']>
   where?: InputMaybe<ValetAssignmentWhereInput>
+}
+
+export type QueryValetDropsArgs = {
+  skip?: InputMaybe<Scalars['Float']['input']>
+  take?: InputMaybe<Scalars['Float']['input']>
+}
+
+export type QueryValetPickupsArgs = {
+  skip?: InputMaybe<Scalars['Float']['input']>
+  take?: InputMaybe<Scalars['Float']['input']>
 }
 
 export type QueryValetsArgs = {
@@ -1654,11 +1684,11 @@ export type ValetAssignment = {
   pickupLat: Scalars['Float']['output']
   pickupLng: Scalars['Float']['output']
   pickupValet?: Maybe<Valet>
-  pickupValetId: Scalars['String']['output']
+  pickupValetId?: Maybe<Scalars['String']['output']>
   returnLat?: Maybe<Scalars['Float']['output']>
   returnLng?: Maybe<Scalars['Float']['output']>
   returnValet?: Maybe<Valet>
-  returnValetId: Scalars['String']['output']
+  returnValetId?: Maybe<Scalars['String']['output']>
   updatedAt: Scalars['DateTime']['output']
 }
 
@@ -2238,7 +2268,11 @@ export type ValetMeQueryVariables = Exact<{ [key: string]: never }>
 
 export type ValetMeQuery = {
   __typename?: 'Query'
-  valetMe: { __typename?: 'Valet'; uid: string; companyId?: number | null }
+  valetMe?: {
+    __typename?: 'Valet'
+    uid: string
+    companyId?: number | null
+  } | null
 }
 
 export type CreateValetMutationVariables = Exact<{
@@ -2276,6 +2310,167 @@ export type CompanyValetsQuery = {
   }>
 }
 
+export type ValetPickupsQueryVariables = Exact<{
+  skip?: InputMaybe<Scalars['Float']['input']>
+  take?: InputMaybe<Scalars['Float']['input']>
+}>
+
+export type ValetPickupsQuery = {
+  __typename?: 'Query'
+  valetPickupsTotal: number
+  valetPickups: Array<{
+    __typename?: 'Booking'
+    id: number
+    vehicleNumber: string
+    startTime: any
+    endTime: any
+    valetAssignment?: {
+      __typename?: 'ValetAssignment'
+      pickupLat: number
+      pickupLng: number
+      pickupValetId?: string | null
+    } | null
+    slot: {
+      __typename?: 'Slot'
+      garage: {
+        __typename?: 'Garage'
+        address?: { __typename?: 'Address'; lat: number; lng: number } | null
+      }
+    }
+  }>
+}
+
+export type ValetDropsQueryVariables = Exact<{
+  skip?: InputMaybe<Scalars['Float']['input']>
+  take?: InputMaybe<Scalars['Float']['input']>
+}>
+
+export type ValetDropsQuery = {
+  __typename?: 'Query'
+  valetDropsTotal: number
+  valetDrops: Array<{
+    __typename?: 'Booking'
+    id: number
+    vehicleNumber: string
+    startTime: any
+    endTime: any
+    valetAssignment?: {
+      __typename?: 'ValetAssignment'
+      returnLat?: number | null
+      returnLng?: number | null
+      returnValetId?: string | null
+    } | null
+    slot: {
+      __typename?: 'Slot'
+      garage: {
+        __typename?: 'Garage'
+        address?: { __typename?: 'Address'; lat: number; lng: number } | null
+      }
+    }
+  }>
+}
+
+export type AssignValetMutationVariables = Exact<{
+  bookingId: Scalars['Float']['input']
+  status: Scalars['String']['input']
+}>
+
+export type AssignValetMutation = {
+  __typename?: 'Mutation'
+  assignValet: { __typename?: 'Booking'; id: number }
+}
+
+export type ValetBookingFieldsFragment = {
+  __typename?: 'Booking'
+  id: number
+  vehicleNumber: string
+  passcode?: string | null
+  status: BookingStatus
+  startTime: any
+  endTime: any
+  slot: {
+    __typename?: 'Slot'
+    garage: {
+      __typename?: 'Garage'
+      address?: { __typename?: 'Address'; lat: number; lng: number } | null
+    }
+  }
+}
+
+export type MyPickupTripsQueryVariables = Exact<{
+  distinct?: InputMaybe<Array<BookingScalarFieldEnum> | BookingScalarFieldEnum>
+  skip?: InputMaybe<Scalars['Float']['input']>
+  take?: InputMaybe<Scalars['Float']['input']>
+  orderBy?: InputMaybe<
+    Array<BookingOrderByWithRelationInput> | BookingOrderByWithRelationInput
+  >
+  where?: InputMaybe<BookingWhereInput>
+}>
+
+export type MyPickupTripsQuery = {
+  __typename?: 'Query'
+  bookingsForValet: Array<{
+    __typename?: 'Booking'
+    id: number
+    vehicleNumber: string
+    passcode?: string | null
+    status: BookingStatus
+    startTime: any
+    endTime: any
+    valetAssignment?: {
+      __typename?: 'ValetAssignment'
+      pickupLat: number
+      pickupLng: number
+      pickupValetId?: string | null
+    } | null
+    slot: {
+      __typename?: 'Slot'
+      garage: {
+        __typename?: 'Garage'
+        address?: { __typename?: 'Address'; lat: number; lng: number } | null
+      }
+    }
+  }>
+  bookingsCount: { __typename?: 'AggregateCountOutput'; count: number }
+}
+
+export type MyDropTripsQueryVariables = Exact<{
+  distinct?: InputMaybe<Array<BookingScalarFieldEnum> | BookingScalarFieldEnum>
+  skip?: InputMaybe<Scalars['Float']['input']>
+  take?: InputMaybe<Scalars['Float']['input']>
+  orderBy?: InputMaybe<
+    Array<BookingOrderByWithRelationInput> | BookingOrderByWithRelationInput
+  >
+  where?: InputMaybe<BookingWhereInput>
+}>
+
+export type MyDropTripsQuery = {
+  __typename?: 'Query'
+  bookingsForValet: Array<{
+    __typename?: 'Booking'
+    id: number
+    vehicleNumber: string
+    passcode?: string | null
+    status: BookingStatus
+    startTime: any
+    endTime: any
+    valetAssignment?: {
+      __typename?: 'ValetAssignment'
+      returnLat?: number | null
+      returnLng?: number | null
+      returnValetId?: string | null
+    } | null
+    slot: {
+      __typename?: 'Slot'
+      garage: {
+        __typename?: 'Garage'
+        address?: { __typename?: 'Address'; lat: number; lng: number } | null
+      }
+    }
+  }>
+  bookingsCount: { __typename?: 'AggregateCountOutput'; count: number }
+}
+
 export const namedOperations = {
   Query: {
     Companies: 'Companies',
@@ -2287,6 +2482,10 @@ export const namedOperations = {
     BookingsForGarage: 'BookingsForGarage',
     ValetMe: 'ValetMe',
     companyValets: 'companyValets',
+    valetPickups: 'valetPickups',
+    valetDrops: 'valetDrops',
+    myPickupTrips: 'myPickupTrips',
+    myDropTrips: 'myDropTrips',
   },
   Mutation: {
     RegisterWithCredentials: 'RegisterWithCredentials',
@@ -2297,10 +2496,12 @@ export const namedOperations = {
     CreateManySlots: 'CreateManySlots',
     createBookingTimeline: 'createBookingTimeline',
     CreateValet: 'CreateValet',
+    AssignValet: 'AssignValet',
   },
   Fragment: {
     ValetFields: 'ValetFields',
     BookingFields: 'BookingFields',
+    ValetBookingFields: 'ValetBookingFields',
   },
 }
 export const ValetFieldsFragmentDoc = {
@@ -2455,6 +2656,65 @@ export const BookingFieldsFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<BookingFieldsFragment, unknown>
+export const ValetBookingFieldsFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ValetBookingFields' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Booking' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'vehicleNumber' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'passcode' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'status' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'startTime' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'endTime' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'slot' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'garage' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'address' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'lat' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'lng' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ValetBookingFieldsFragment, unknown>
 export const RegisterWithCredentialsDocument = {
   kind: 'Document',
   definitions: [
@@ -4352,3 +4612,759 @@ export const CompanyValetsDocument = {
     },
   ],
 } as unknown as DocumentNode<CompanyValetsQuery, CompanyValetsQueryVariables>
+export const ValetPickupsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'valetPickups' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Float' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'take' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Float' } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'valetPickups' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'skip' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'skip' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'take' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'take' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'vehicleNumber' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'valetAssignment' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'pickupLat' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'pickupLng' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'pickupValetId' },
+                      },
+                    ],
+                  },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'startTime' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'endTime' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'slot' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'garage' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'address' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'lat' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'lng' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'valetPickupsTotal' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ValetPickupsQuery, ValetPickupsQueryVariables>
+export const ValetDropsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'valetDrops' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Float' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'take' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Float' } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'valetDrops' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'skip' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'skip' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'take' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'take' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'vehicleNumber' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'startTime' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'endTime' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'valetAssignment' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'returnLat' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'returnLng' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'returnValetId' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'slot' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'garage' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'address' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'lat' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'lng' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'valetDropsTotal' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ValetDropsQuery, ValetDropsQueryVariables>
+export const AssignValetDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'AssignValet' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'bookingId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'Float' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'status' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'assignValet' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'bookingId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'bookingId' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'status' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'status' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<AssignValetMutation, AssignValetMutationVariables>
+export const MyPickupTripsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'myPickupTrips' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'distinct' },
+          },
+          type: {
+            kind: 'ListType',
+            type: {
+              kind: 'NonNullType',
+              type: {
+                kind: 'NamedType',
+                name: { kind: 'Name', value: 'BookingScalarFieldEnum' },
+              },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Float' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'take' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Float' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'orderBy' },
+          },
+          type: {
+            kind: 'ListType',
+            type: {
+              kind: 'NonNullType',
+              type: {
+                kind: 'NamedType',
+                name: {
+                  kind: 'Name',
+                  value: 'BookingOrderByWithRelationInput',
+                },
+              },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'where' },
+          },
+          type: {
+            kind: 'NamedType',
+            name: { kind: 'Name', value: 'BookingWhereInput' },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'bookingsForValet' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'distinct' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'distinct' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'skip' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'skip' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'take' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'take' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'orderBy' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'orderBy' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'where' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'ValetBookingFields' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'valetAssignment' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'pickupLat' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'pickupLng' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'pickupValetId' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'bookingsCount' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'where' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'count' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ValetBookingFields' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Booking' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'vehicleNumber' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'passcode' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'status' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'startTime' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'endTime' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'slot' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'garage' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'address' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'lat' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'lng' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<MyPickupTripsQuery, MyPickupTripsQueryVariables>
+export const MyDropTripsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'myDropTrips' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'distinct' },
+          },
+          type: {
+            kind: 'ListType',
+            type: {
+              kind: 'NonNullType',
+              type: {
+                kind: 'NamedType',
+                name: { kind: 'Name', value: 'BookingScalarFieldEnum' },
+              },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Float' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'take' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Float' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'orderBy' },
+          },
+          type: {
+            kind: 'ListType',
+            type: {
+              kind: 'NonNullType',
+              type: {
+                kind: 'NamedType',
+                name: {
+                  kind: 'Name',
+                  value: 'BookingOrderByWithRelationInput',
+                },
+              },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'where' },
+          },
+          type: {
+            kind: 'NamedType',
+            name: { kind: 'Name', value: 'BookingWhereInput' },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'bookingsForValet' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'distinct' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'distinct' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'skip' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'skip' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'take' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'take' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'orderBy' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'orderBy' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'where' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'ValetBookingFields' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'valetAssignment' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'returnLat' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'returnLng' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'returnValetId' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'bookingsCount' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'where' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'count' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ValetBookingFields' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Booking' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'vehicleNumber' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'passcode' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'status' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'startTime' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'endTime' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'slot' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'garage' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'address' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'lat' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'lng' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<MyDropTripsQuery, MyDropTripsQueryVariables>

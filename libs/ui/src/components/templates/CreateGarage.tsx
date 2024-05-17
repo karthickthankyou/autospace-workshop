@@ -69,7 +69,6 @@ const CreateGarageContent = () => {
               location,
               slotTypes,
             }) => {
-              console.log('data', data)
               const uploadedImages = await upload(images)
 
               const result = await createGarage({

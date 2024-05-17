@@ -1,15 +1,15 @@
 'use client'
 import { IsLoggedIn } from '@autospace/ui/src/components/organisms/IsLoggedIn'
 import { IsValet } from '@autospace/ui/src/components/organisms/IsValet'
-import { ValetHome } from '@autospace/ui/src/components/templates/ValetHome'
+import { ValetTrips } from '@autospace/ui/src/components/templates/ValetTrips'
 
-export default function Home() {
+export default function Page() {
   return (
     <main>
       <IsLoggedIn>
         {(uid) => (
           <IsValet uid={uid}>
-            <ValetHome />
+            <ValetTrips uid={uid} />
           </IsValet>
         )}
       </IsLoggedIn>
