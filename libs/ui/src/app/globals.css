@@ -1,4 +1,4 @@
-@import '../components/organisms/Map/map.css';
+@import '../components/organisms/map/map.css';
 @import 'react-toastify/dist/ReactToastify.css';
 
 @tailwind base;
