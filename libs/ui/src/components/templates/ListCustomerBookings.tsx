@@ -17,7 +17,9 @@ export const ListCustomerBookings = () => {
         <Tab label={'ON GOING'} />
       </Tabs>
       <TabPanel value={value} index={0}>
-        <ShowCustomerBookings statuses={[BookingStatus.CheckedOut]} />
+        <ShowCustomerBookings
+          statuses={[BookingStatus.CheckedOut, BookingStatus.ValetReturned]}
+        />
       </TabPanel>
       <TabPanel value={value} index={1}>
         <ShowCustomerBookings

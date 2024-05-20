@@ -36,6 +36,7 @@ export const ListGarages = ({
         setSkip,
         setTake,
       }}
+      childrenClassName="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3"
       title={
         <div className="flex items-center gap-4">
           <div>Garages</div>

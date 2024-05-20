@@ -75,7 +75,10 @@ export const ShowValetMyDropTrips = ({ uid }: { uid: string }) => {
               {booking.status?.split('_').join(' ')}
             </div>
 
-            {booking.status === BookingStatus.ValetAssignedForCheckIn ? (
+            {[
+              BookingStatus.ValetAssignedForCheckIn,
+              BookingStatus.CheckedOut,
+            ].includes(booking.status) ? (
               <AssignValetButton
                 bookingId={booking.id}
                 status={BookingStatus.ValetReturned}

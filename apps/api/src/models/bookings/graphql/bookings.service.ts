@@ -56,21 +56,28 @@ export class BookingsService {
       throw new NotFoundException('No slots found.')
     }
 
-    return this.prisma.booking.create({
-      data: {
-        endTime: new Date(endTime).toISOString(),
-        startTime: new Date(startTime).toISOString(),
-        vehicleNumber,
-        customerId,
-        phoneNumber,
-        passcode,
-        slotId: slot.id,
-        pricePerHour,
-        totalPrice,
-        ...(valetAssignment
-          ? { ValetAssignment: { create: valetAssignment } }
-          : null),
-      },
+    return this.prisma.$transaction(async (tx) => {
+      const booking = await tx.booking.create({
+        data: {
+          endTime: new Date(endTime).toISOString(),
+          startTime: new Date(startTime).toISOString(),
+          vehicleNumber,
+          customerId,
+          phoneNumber,
+          passcode,
+          slotId: slot.id,
+          pricePerHour,
+          totalPrice,
+          ...(valetAssignment
+            ? { ValetAssignment: { create: valetAssignment } }
+            : null),
+        },
+      })
+      await tx.bookingTimeline.create({
+        data: { bookingId: booking.id, status: 'BOOKED' },
+      })
+
+      return booking
     })
   }
 

@@ -32,7 +32,7 @@ export const Dialog = ({
     <Transition appear show={open} as={Fragment}>
       <HeadlessUIDialog
         as="div"
-        className="relative z-10 rounded"
+        className="relative z-50 rounded"
         onClose={closeModal}
       >
         <TransitionChild

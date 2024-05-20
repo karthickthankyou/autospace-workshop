@@ -28,7 +28,7 @@ export const LoginForm = ({ className }: ILoginFormProps) => {
         const { email, password } = data
         setLoading(true)
 
-        const result = await signIn('google', {
+        const result = await signIn('credentials', {
           email,
           password,
           redirect: false,
@@ -44,10 +44,15 @@ export const LoginForm = ({ className }: ILoginFormProps) => {
       })}
     >
       <HtmlLabel title="Email" error={errors.email?.message}>
-        <HtmlInput {...register('email')} placeholder="email" />
+        <HtmlInput
+          className="text-black"
+          {...register('email')}
+          placeholder="email"
+        />
       </HtmlLabel>
       <HtmlLabel title="Password" error={errors.password?.message}>
         <HtmlInput
+          className="text-black"
           type="password"
           {...register('password')}
           placeholder="******"

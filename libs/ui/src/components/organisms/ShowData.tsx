@@ -16,6 +16,7 @@ interface ShowDataProps {
   }
   title?: React.ReactNode
   children: React.ReactNode
+  childrenClassName?: string
 }
 
 export const ShowData = ({
@@ -24,6 +25,7 @@ export const ShowData = ({
   pagination,
   title,
   children,
+  childrenClassName = 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3',
 }: ShowDataProps) => {
   const { setSkip, setTake, skip, take, resultCount, totalCount } = pagination
 
@@ -49,9 +51,7 @@ export const ShowData = ({
         </AlertSection>
       )}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3">
-        {children}
-      </div>
+      <div className={childrenClassName}>{children}</div>
       <div className="flex justify-center mt-8">
         <Pagination
           count={totalPages}

@@ -9,7 +9,10 @@ import { HtmlInput } from '../atoms/HtmlInput'
 import { HtmlLabel } from '../atoms/HtmlLabel'
 import { useCloudinaryUpload } from '@autospace/util/hooks/cloudinary'
 import { useMutation } from '@apollo/client'
-import { CreateValetDocument } from '@autospace/network/src/gql/generated'
+import {
+  CreateValetDocument,
+  namedOperations,
+} from '@autospace/network/src/gql/generated'
 import { toast } from '../molecules/Toast'
 
 export const AddValet = () => {
@@ -31,6 +34,8 @@ export const AddValet = () => {
       reset()
       setOpen(false)
     },
+    awaitRefetchQueries: true,
+    refetchQueries: [namedOperations.Query.companyValets],
   })
 
   const { uploading, upload } = useCloudinaryUpload()
