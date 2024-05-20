@@ -18,21 +18,18 @@ export const formSchemaValet = z.object({
   differentLocations: z.boolean().optional(),
 })
 
-export const formSchemaBookSlot = z.object({
-  startTime: z.string(),
-  endTime: z.string(),
-  vehicleNumber: z.string().min(1, { message: 'Vehicle number is required' }),
-  phoneNumber: z.string().min(1, { message: 'Phone number is required' }),
-  type: z.nativeEnum(SlotType, {
-    required_error: 'Slot type is required',
-  }),
-  valet: formSchemaValet.optional(),
-})
-
-export type FormTypeBookSlot = z.infer<typeof formSchemaBookSlot>
-
-formSchemaBookSlot
-  .refine(({ endTime, startTime }) => isStartTimeValid(startTime), {
+export const formSchemaBookSlot = z
+  .object({
+    startTime: z.string(),
+    endTime: z.string(),
+    vehicleNumber: z.string().min(1, { message: 'Vehicle number is required' }),
+    phoneNumber: z.string().min(1, { message: 'Phone number is required' }),
+    type: z.nativeEnum(SlotType, {
+      required_error: 'Slot type is required',
+    }),
+    valet: formSchemaValet.optional(),
+  })
+  .refine(({ startTime }) => isStartTimeValid(startTime), {
     message: 'Start time should be greater than current time',
     path: ['startTime'],
   })
@@ -40,6 +37,8 @@ formSchemaBookSlot
     message: 'End time should be greater than start time',
     path: ['endTime'],
   })
+
+export type FormTypeBookSlot = z.infer<typeof formSchemaBookSlot>
 
 export const userFormBookSlot = ({
   defaultValues,
@@ -49,6 +48,7 @@ export const userFormBookSlot = ({
   useForm<FormTypeBookSlot>({
     resolver: zodResolver(formSchemaBookSlot),
     defaultValues,
+    mode: 'onChange',
   })
 
 export const FormProviderBookSlot = ({

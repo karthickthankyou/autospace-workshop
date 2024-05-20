@@ -30,13 +30,14 @@ export const useConvertSearchFormToVariables = () => {
     useState<SearchGaragesQueryVariables | null>(null)
 
   const {
-    formState: { dirtyFields },
-    watch,
+    formState: { dirtyFields, errors },
   } = useFormContext<FormTypeSearchGarage>()
 
   const formData = useWatch<FormTypeSearchGarage>()
 
   const [debouncedFormData, { debouncing }] = useDebounce(formData, 300)
+
+  const hasErrors = Object.keys(errors).length !== 0
 
   useEffect(() => {
     const {
@@ -81,9 +82,7 @@ export const useConvertSearchFormToVariables = () => {
     })
   }, [debouncedFormData])
 
-  console.log('Hello filters')
-
-  return { variables, debouncing }
+  return { variables: hasErrors ? null : variables, debouncing }
 }
 
 export const createSlotsFilter = (
