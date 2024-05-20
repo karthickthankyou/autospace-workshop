@@ -19,8 +19,8 @@ export const Directions = ({
   const prevOriginRef = useRef<LatLng | undefined>(undefined)
   const prevDestinationRef = useRef<Partial<LatLng> | undefined>(undefined)
 
-  const originDebounced = useDebounce(origin, 400)
-  const destinationDebounced = useDebounce(destination, 400)
+  const [originDebounced] = useDebounce(origin, 400)
+  const [destinationDebounced] = useDebounce(destination, 400)
 
   useEffect(() => {
     if (

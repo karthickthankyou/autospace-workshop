@@ -7,7 +7,7 @@ export const useSearchLocation = () => {
   const [loading, setLoading] = useState(false)
   const [locationInfo, setLocationInfo] = useState<LocationInfo[]>(() => [])
 
-  const debouncedSearchText = useDebounce(searchText, 400)
+  const [debouncedSearchText] = useDebounce(searchText, 400)
 
   useEffect(() => {
     setLoading(true)
