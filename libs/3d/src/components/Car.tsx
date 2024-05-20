@@ -18,7 +18,7 @@ interface CarProps {
 }
 
 export const Car: React.FC<CarProps> = ({
-  color = 'hsl(52, 100%, 50%)',
+  color = '#fff',
   position = new Vector3(0, 0, 0),
   forward = true,
   trail = true,

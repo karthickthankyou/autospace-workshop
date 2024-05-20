@@ -37,10 +37,10 @@ export const CarScene = ({
       {camera || (
         <PerspectiveCamera
           makeDefault
-          fov={60}
+          fov={45}
           near={0.1}
           far={1000}
-          position={[0, 200, 0]}
+          position={[40, 200, 40]}
           rotation={[radians(60), 0, 0]}
         />
       )}
