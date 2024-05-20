@@ -5,6 +5,7 @@ import { IconArrowBack } from '@tabler/icons-react'
 import Link from 'next/link'
 import { ReactNode } from 'react'
 import { BrandIcon } from '../atoms/BrandIcon'
+import { GoogleButton } from './GoogleButton'
 
 export interface IAuthLayoutProps {
   children: ReactNode
@@ -13,35 +14,30 @@ export interface IAuthLayoutProps {
 
 export const AuthLayout = ({ title, children }: IAuthLayoutProps) => {
   return (
-    <div className="flex gap-2 justify-center h-[calc(100vh-4rem)] overflow-hidden  p-2 ">
-      <div
-        className=" -skew-y-3 origin-top-right min-w-96 flex flex-col justify-center items-center   "
-        style={{
-          background:
-            'linear-gradient(to top right, hsl(0, 0%, 6%), hsl(52, 0%, 10%))',
-        }}
-      >
-        <div className="p-4 text-white">
+    <div className="relative h-[calc(100vh-4rem)]  ">
+      <CarScene
+        orbitControls={false}
+        camera={<RotatingCamera />}
+        hideAllComments
+      />
+      <div className=" flex flex-col justify-center items-center absolute top-0 bg-black/20 backdrop-blur-sm bottom-0  ">
+        <div className="p-4 text-white ">
           <div className="w-full max-w-lg mx-auto ">
             <h1 className="flex items-center gap-2 mb-2 text-2xl">
               <BrandIcon /> <div>{title}</div>
             </h1>
             {children}
             <div className="mt-4 text-sm text-gray-300">
+              <div className="flex flex-col items-center mb-4">
+                <div className="mb-1 text-xs">Or, continue with</div>
+                <GoogleButton />
+              </div>
               <Link href="/" className="flex items-center gap-2">
                 <IconArrowBack className="w-4 h-4" /> Back to home
               </Link>
             </div>
           </div>
         </div>
-      </div>
-
-      <div className="relative  flex-grow  bg-white">
-        <CarScene
-          orbitControls={false}
-          camera={<RotatingCamera />}
-          hideAllComments
-        />
       </div>
     </div>
   )

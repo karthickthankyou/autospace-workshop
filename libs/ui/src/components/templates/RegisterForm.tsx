@@ -75,7 +75,7 @@ export const RegisterForm = ({ className, role }: ISignupFormProps) => {
           Please fix the above {Object.keys(errors).length} errors
         </div>
       ) : null}
-      <Button type="submit" fullWidth>
+      <Button type="submit" fullWidth loading={loading}>
         Register
       </Button>
       <div className="mt-4 text-sm ">

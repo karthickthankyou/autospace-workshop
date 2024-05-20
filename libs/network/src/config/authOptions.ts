@@ -20,6 +20,11 @@ export const authOptions: NextAuthOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      authorization: {
+        params: {
+          scope: 'openid profile',
+        },
+      },
     }),
     // Credentials provider configuration for email/password authentication
     CredentialsProvider({
