@@ -11,9 +11,15 @@ export interface ISidebarProps {
   open: boolean
   setOpen: (open: boolean) => void
   children: ReactNode
+  blur?: boolean
 }
 
-export const Sidebar = ({ open, setOpen, children }: ISidebarProps) => {
+export const Sidebar = ({
+  open,
+  setOpen,
+  children,
+  blur = true,
+}: ISidebarProps) => {
   return (
     <Transition appear show={open} as={Fragment}>
       <Dialog
@@ -21,17 +27,19 @@ export const Sidebar = ({ open, setOpen, children }: ISidebarProps) => {
         className="fixed inset-0 z-50 overflow-hidden"
         onClose={() => setOpen(false)}
       >
-        <TransitionChild
-          as={Fragment}
-          enter="transition-opacity ease-linear duration-150"
-          enterFrom="opacity-0"
-          enterTo="opacity-100"
-          leave="transition-opacity ease-linear duration-100"
-          leaveFrom="opacity-100"
-          leaveTo="opacity-0"
-        >
-          <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" />
-        </TransitionChild>
+        {blur ? (
+          <TransitionChild
+            as={Fragment}
+            enter="transition-opacity ease-linear duration-150"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="transition-opacity ease-linear duration-100"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" />
+          </TransitionChild>
+        ) : null}
 
         <div className="fixed inset-y-0 right-0 flex max-w-full bg-white  ">
           <TransitionChild

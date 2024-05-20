@@ -36,7 +36,7 @@ export const FilterSidebar = () => {
         <IconFilter className="stroke-1.5 text-black" />
         {Object.values(dirtyFields).length ? <PulsingDot /> : null}
       </Button>
-      <Sidebar open={open} setOpen={setOpen}>
+      <Sidebar open={open} setOpen={setOpen} blur={false}>
         <div className="flex flex-col items-start gap-3">
           <Controller
             name="types"

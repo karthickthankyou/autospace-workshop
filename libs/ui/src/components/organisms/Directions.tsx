@@ -40,7 +40,7 @@ export const Directions = ({
     prevDestinationRef.current = destinationDebounced
     ;(async () => {
       const response = await fetch(
-        `https://api.mapbox.com/directions/v5/mapbox/walking/${originDebounced.lng},${originDebounced.lat};${destinationDebounced.lng},${destinationDebounced.lat}?access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}&steps=true&overview=simplified`,
+        `https://api.mapbox.com/directions/v5/mapbox/driving/${originDebounced.lng},${originDebounced.lat};${destinationDebounced.lng},${destinationDebounced.lat}?access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}&steps=true&overview=simplified`,
       )
 
       const data = await response.json()

@@ -27,7 +27,7 @@ export default function RootLayout({
       <body className={`${inter.className} bg-gray-25`}>
         <SessionProvider>
           <ApolloProvider>
-            <Header menuItems={MENUITEMS} />
+            <Header type="valet" menuItems={MENUITEMS} />
             <Container>{children}</Container>
           </ApolloProvider>
         </SessionProvider>
