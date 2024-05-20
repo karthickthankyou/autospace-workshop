@@ -23,6 +23,9 @@
     "entity:rest": "npx nestjs-prisma-codegen --rest",
     "entity:complete": "npx nestjs-prisma-codegen --complete"
   },
+  "prisma": {
+    "seed": "ts-node prisma/seed/index.ts"
+  },
   "dependencies": {
     "@apollo/server": "^4.10.2",
     "@nestjs/apollo": "^12.1.0",
