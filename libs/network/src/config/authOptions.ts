@@ -13,7 +13,9 @@ import { JWT } from 'next-auth/jwt'
 
 const MAX_AGE = 1 * 24 * 60 * 60
 
-const isProduction = process.env.NODE_ENV === 'production'
+const secureCookies = process.env.NEXTAUTH_URL?.startsWith('https://')
+const hostName = new URL(process.env.NEXTAUTH_URL || '').hostname
+const rootDomain = 'karthicktech.com'
 
 export const authOptions: NextAuthOptions = {
   // Configure authentication providers
@@ -116,29 +118,13 @@ export const authOptions: NextAuthOptions = {
   },
   cookies: {
     sessionToken: {
-      name: `__Secure-next-auth.session-token`,
+      name: `${secureCookies ? '__Secure-' : ''}next-auth.session-token`,
       options: {
         httpOnly: true,
-        sameSite: 'none',
-        secure: isProduction, // Only use secure in production
-        domain: isProduction ? process.env.COOKIE_DOMAIN : undefined, // Set domain for production
-      },
-    },
-    csrfToken: {
-      name: `__Secure-next-auth.csrf-token`,
-      options: {
-        httpOnly: true,
-        sameSite: 'none',
-        secure: isProduction, // Only use secure in production
-        domain: isProduction ? process.env.COOKIE_DOMAIN : undefined, // Set domain for production
-      },
-    },
-    callbackUrl: {
-      name: `__Secure-next-auth.callback-url`,
-      options: {
-        sameSite: 'none',
-        secure: isProduction, // Only use secure in production
-        domain: isProduction ? process.env.COOKIE_DOMAIN : undefined, // Set domain for production
+        sameSite: 'lax',
+        path: '/',
+        secure: secureCookies,
+        domain: hostName == 'localhost' ? hostName : '.' + rootDomain, // add a . in front so that subdomains are included
       },
     },
   },
