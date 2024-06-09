@@ -1,5 +1,5 @@
 {
-  "name": "web-valet",
+  "name": "@autospace/web-valet",
   "version": "0.1.0",
   "private": true,
   "scripts": {

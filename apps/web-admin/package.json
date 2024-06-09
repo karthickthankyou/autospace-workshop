@@ -1,5 +1,5 @@
 {
-  "name": "web-admin",
+  "name": "@autospace/web-admin",
   "version": "0.1.0",
   "private": true,
   "scripts": {
